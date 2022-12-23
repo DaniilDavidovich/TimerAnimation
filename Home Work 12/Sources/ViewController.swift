@@ -21,7 +21,8 @@ class ViewController: UIViewController {
     
     private lazy var startStopButton: UIButton = {
         let button = UIButton(type: .system)
-        
+        button.layer.backgroundColor = UIColor.black.cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -43,6 +44,17 @@ class ViewController: UIViewController {
         return image
     }()
     
+    private lazy var buttonStack: UIStackView = {
+    let stack = UIStackView()
+    stack.axis = .horizontal
+    stack.alignment = .center
+    stack.distribution = .fillProportionally
+    stack.addArrangedSubview(startStopButton)
+    stack.addArrangedSubview(viewForImage)
+    stack.translatesAutoresizingMaskIntoConstraints = false
+    return stack
+    }()
+    
     //MARK: - Lyfecycle
     
     override func viewDidLoad() {
@@ -60,8 +72,7 @@ class ViewController: UIViewController {
     
     private func setupHierarchy() {
         let subviews = [timeLabel,
-                        startStopButton,
-                        viewForImage,
+                        buttonStack
         ]
         subviews.forEach({ view.addSubview($0) })
     }
@@ -72,15 +83,16 @@ class ViewController: UIViewController {
             timeLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             timeLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -70),
             
-            startStopButton.centerYAnchor.constraint(equalTo: timeLabel.centerYAnchor, constant: 100),
-            startStopButton.centerXAnchor.constraint(equalTo: timeLabel.centerXAnchor)
+            buttonStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            buttonStack.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 100),
+            buttonStack.widthAnchor.constraint(equalToConstant: 50),
+            buttonStack.heightAnchor.constraint(equalToConstant: 50)
             
         ])
         
     }
     
     //MARK: - Action
-    
 
 
 }
