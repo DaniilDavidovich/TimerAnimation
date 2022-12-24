@@ -9,51 +9,35 @@ import UIKit
 
 class ViewController: UIViewController {
     //MARK: - UI elements
-   
+    
+    private let image = UIImage(systemName: "play")
+    private let imageStop = UIImage(systemName: "pause")
+    
+    private lazy var imageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(systemName: "play"))
+        
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
     private lazy var timeLabel: UILabel = {
         let label = UILabel()
-        label.text = "0"
+        label.text = "30"
         label.textColor = .black
-        label.font = .boldSystemFont(ofSize: 40)
+        label.font = .boldSystemFont(ofSize: 60)
         label.translatesAutoresizingMaskIntoConstraints = false
+
         return label
     }()
     
-    private lazy var startStopButton: UIButton = {
+    private lazy var button: UIButton = {
         let button = UIButton(type: .system)
-        button.layer.backgroundColor = UIColor.black.cgColor
+        button.isEnabled = true
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
         return button
     }()
-    
-    private lazy var viewForImage: UIImageView = {
-        let view = UIImageView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        return view
-    }()
-    
-    private lazy var playImage: UIImage = {
-        let image = UIImage(named: "play")!
-        return image
-    }()
-    
-    private lazy var pausaImage: UIImage = {
-        let image = UIImage(named: "pause.fill")!
-        
-        return image
-    }()
-    
-    private lazy var buttonStack: UIStackView = {
-    let stack = UIStackView()
-    stack.axis = .horizontal
-    stack.alignment = .center
-    stack.distribution = .fillProportionally
-    stack.addArrangedSubview(startStopButton)
-    stack.addArrangedSubview(viewForImage)
-    stack.translatesAutoresizingMaskIntoConstraints = false
-    return stack
-    }()
+
     
     //MARK: - Lyfecycle
     
@@ -72,7 +56,9 @@ class ViewController: UIViewController {
     
     private func setupHierarchy() {
         let subviews = [timeLabel,
-                        buttonStack
+                        button,
+                        imageView
+                     
         ]
         subviews.forEach({ view.addSubview($0) })
     }
@@ -81,19 +67,33 @@ class ViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             timeLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            timeLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -70),
+            timeLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50),
             
-            buttonStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            buttonStack.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 100),
-            buttonStack.widthAnchor.constraint(equalToConstant: 50),
-            buttonStack.heightAnchor.constraint(equalToConstant: 50)
-            
+            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 200),
+            imageView.widthAnchor.constraint(equalToConstant: 90),
+            imageView.heightAnchor.constraint(equalToConstant: 90),
+
+
+            button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            button.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 200),
+            button.widthAnchor.constraint(equalToConstant: 90),
+            button.heightAnchor.constraint(equalToConstant: 90)
+    
         ])
         
     }
     
     //MARK: - Action
-
-
+    @objc private func buttonPressed() {
+        if timeLabel.text == "30" {
+            imageView.image = UIImage(systemName: "play")
+            timeLabel.text = "0"
+            print("see")
+        } else {
+            imageView.image = UIImage(systemName: "pause")
+            print("yes")
+            timeLabel.text = "30"
+        }
+    }
 }
-
