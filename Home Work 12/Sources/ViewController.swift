@@ -10,24 +10,30 @@ import UIKit
 class ViewController: UIViewController {
     //MARK: - UI elements
     
-    private let image = UIImage(systemName: "play")
-    private let imageStop = UIImage(systemName: "pause")
+    private var timer = Timer()
+    private var durationTimer = 10
+    
+    private lazy var timeLabel: UILabel = {
+        let label = UILabel()
+        label.text = "\(durationTimer)"
+        label.textColor = .black
+        label.font = .boldSystemFont(ofSize: 60)
+        label.translatesAutoresizingMaskIntoConstraints = false
+
+        return label
+    }()
+        
+    private lazy var circleView: UIImageView = {
+        let ellipse = UIImageView(image: (UIImage(systemName: "circle")))
+        ellipse.translatesAutoresizingMaskIntoConstraints = false
+        return ellipse
+    }()
     
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "play"))
         
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
-    }()
-    
-    private lazy var timeLabel: UILabel = {
-        let label = UILabel()
-        label.text = "30"
-        label.textColor = .black
-        label.font = .boldSystemFont(ofSize: 60)
-        label.translatesAutoresizingMaskIntoConstraints = false
-
-        return label
     }()
     
     private lazy var button: UIButton = {
@@ -37,6 +43,7 @@ class ViewController: UIViewController {
         button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
         return button
     }()
+   
 
     
     //MARK: - Lyfecycle
@@ -57,7 +64,8 @@ class ViewController: UIViewController {
     private func setupHierarchy() {
         let subviews = [timeLabel,
                         button,
-                        imageView
+                        imageView,
+                        circleView
                      
         ]
         subviews.forEach({ view.addSubview($0) })
@@ -69,12 +77,16 @@ class ViewController: UIViewController {
             timeLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             timeLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50),
             
+            circleView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            circleView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50),
+            circleView.heightAnchor.constraint(equalToConstant: 300),
+            circleView.widthAnchor.constraint(equalToConstant: 300),
+            
             imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 200),
             imageView.widthAnchor.constraint(equalToConstant: 90),
             imageView.heightAnchor.constraint(equalToConstant: 90),
-
-
+            
             button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             button.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 200),
             button.widthAnchor.constraint(equalToConstant: 90),
@@ -86,14 +98,20 @@ class ViewController: UIViewController {
     
     //MARK: - Action
     @objc private func buttonPressed() {
-        if timeLabel.text == "30" {
-            imageView.image = UIImage(systemName: "play")
-            timeLabel.text = "0"
-            print("see")
-        } else {
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerActive), userInfo: nil, repeats: true)
+
+    }
+    
+    @objc func timerActive() {
             imageView.image = UIImage(systemName: "pause")
-            print("yes")
-            timeLabel.text = "30"
+            durationTimer -= 1
+            timeLabel.text = "\(durationTimer)"
+            print(durationTimer)
+        
+        if durationTimer == 0 {
+            timer.invalidate()
+            imageView.image = UIImage(systemName: "play")
         }
+      
     }
 }
