@@ -111,14 +111,22 @@ class ViewController: UIViewController {
     
     //MARK: - Action
     @objc private func buttonPressed() {
-        if isStarted == false {
+        if isStarted == false && isWorkTime == false {
             basicAnimation()
             timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerActive), userInfo: nil, repeats: true)
             isStarted = true
             isWorkTime = true
             buttonView.image = UIImage(systemName: "pause")
-        } else {
-            
+        } else if isStarted == true && isWorkTime == true {
+            buttonView.image = UIImage(systemName: "play")
+            timer.invalidate()
+            isWorkTime = false
+        } else if isStarted == true && isWorkTime == false {
+            basicAnimation()
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerActive), userInfo: nil, repeats: true)
+            isStarted = true
+            isWorkTime = true
+            buttonView.image = UIImage(systemName: "pause")
         }
 
     }
@@ -129,10 +137,23 @@ class ViewController: UIViewController {
             timerLabel.text = "\(durationTimer)"
             print(durationTimer)
         
-        if durationTimer == 0 {
-            durationTimer = 11
+        if durationTimer == 0 && isStarted == true && isWorkTime == false {
+            durationTimer = 10
+            timerLabel.text = "\(durationTimer)"
             timer.invalidate()
             buttonView.image = UIImage(systemName: "play")
+            
+            isStarted = false
+            isWorkTime = false
+        } else if (durationTimer == 0 && isStarted == false && isWorkTime == false) || (durationTimer == 0 && isStarted == true && isWorkTime == true) {
+            durationTimer = 7
+            timerLabel.text = "\(durationTimer)"
+            timer.invalidate()
+            buttonView.image = UIImage(systemName: "play")
+            print("one")
+            
+            isStarted = true
+            isWorkTime = false
         }
       
     }
