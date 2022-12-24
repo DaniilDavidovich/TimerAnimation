@@ -15,6 +15,7 @@ class ViewController: UIViewController {
     
     private var isWorkTime = false
     private var isStarted = false
+    private var woorkLoop = true
     
     let shapeLayer = CAShapeLayer()
     
@@ -111,28 +112,57 @@ class ViewController: UIViewController {
     
     //MARK: - Action
     @objc private func buttonPressed() {
-        if isStarted == false {
+        if isStarted == false && isWorkTime == false {
             basicAnimation()
             timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerActive), userInfo: nil, repeats: true)
             isStarted = true
             isWorkTime = true
             buttonView.image = UIImage(systemName: "pause")
-        } else {
-            
+            print("start")
+        } else if isStarted == true && isWorkTime == true {
+            buttonView.image = UIImage(systemName: "play")
+            timer.invalidate()
+            isWorkTime = false
+            print("pause")
+        } else if isStarted == true && isWorkTime == false {
+            basicAnimation()
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerActive), userInfo: nil, repeats: true)
+            isStarted = true
+            isWorkTime = true
+            print("start after pause ")
+            buttonView.image = UIImage(systemName: "pause")
         }
 
     }
     
     @objc func timerActive() {
-            
+        
             durationTimer -= 1
             timerLabel.text = "\(durationTimer)"
             print(durationTimer)
         
-        if durationTimer == 0 {
-            durationTimer = 11
+        if durationTimer == 0 && woorkLoop == true {
+            print("timer to relax loop")
+            durationTimer = 5
+            timerLabel.text = "\(durationTimer)"
             timer.invalidate()
             buttonView.image = UIImage(systemName: "play")
+            
+            isStarted = false
+            isWorkTime = false
+            woorkLoop = false
+            
+        } else if durationTimer == 0 && woorkLoop == false {
+            print("timer to works loop ")
+            durationTimer = 10
+            timerLabel.text = "\(durationTimer)"
+            timer.invalidate()
+            buttonView.image = UIImage(systemName: "play")
+            
+            
+            isStarted = false
+            isWorkTime = false
+            woorkLoop = true
         }
       
     }
