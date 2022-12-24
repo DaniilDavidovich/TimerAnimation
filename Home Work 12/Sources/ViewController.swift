@@ -8,7 +8,8 @@
 import UIKit
 
 class ViewController: UIViewController {
-    //MARK: - UI elements
+    
+    //MARK: - Elements To Timer and Animation
     
     private var timer = Timer()
     private var durationTimer = 10
@@ -19,16 +20,18 @@ class ViewController: UIViewController {
     
     let shapeLayer = CAShapeLayer()
     
+    //MARK: - UI elements
+    
     private lazy var timerLabel: UILabel = {
         let label = UILabel()
         label.text = "\(durationTimer)"
         label.textColor = .black
         label.font = .boldSystemFont(ofSize: 60)
         label.translatesAutoresizingMaskIntoConstraints = false
-
+        
         return label
     }()
-        
+    
     private lazy var shapeView: UIImageView = {
         let ellipse = UIImageView()
         ellipse.image = UIImage(systemName: "circle")
@@ -50,8 +53,8 @@ class ViewController: UIViewController {
         button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
         return button
     }()
-   
-
+    
+    
     
     //MARK: - Lyfecycle
     
@@ -65,6 +68,8 @@ class ViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         self.animationCircular()
+        self.colorAnimation()
+        
     }
     
     //MARK: - Setups
@@ -78,7 +83,7 @@ class ViewController: UIViewController {
                         button,
                         buttonView,
                         shapeView
-                     
+                        
         ]
         subviews.forEach({ view.addSubview($0) })
         
@@ -105,7 +110,7 @@ class ViewController: UIViewController {
             button.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 200),
             button.widthAnchor.constraint(equalToConstant: 90),
             button.heightAnchor.constraint(equalToConstant: 90)
-    
+            
         ])
         
     }
@@ -132,14 +137,14 @@ class ViewController: UIViewController {
             print("start after pause ")
             buttonView.image = UIImage(systemName: "pause")
         }
-
+        
     }
     
     @objc func timerActive() {
         
-            durationTimer -= 1
-            timerLabel.text = "\(durationTimer)"
-            print(durationTimer)
+        durationTimer -= 1
+        timerLabel.text = "\(durationTimer)"
+        print(durationTimer)
         
         if durationTimer == 0 && woorkLoop == true {
             print("timer to relax loop")
@@ -159,12 +164,19 @@ class ViewController: UIViewController {
             timer.invalidate()
             buttonView.image = UIImage(systemName: "play")
             
-            
             isStarted = false
             isWorkTime = false
             woorkLoop = true
         }
-      
+        
+        func colorAnimation() {
+            if woorkLoop == true {
+                shapeLayer.strokeColor = UIColor.black.cgColor
+            } else {
+                shapeLayer.strokeColor = UIColor.green.cgColor
+            }
+        }
+        
     }
     
     //MARK: - Animation
@@ -182,7 +194,7 @@ class ViewController: UIViewController {
         shapeLayer.fillColor = UIColor.clear.cgColor
         shapeLayer.strokeEnd = 1
         shapeLayer.lineCap = CAShapeLayerLineCap.round
-        shapeLayer.strokeColor = UIColor.black.cgColor
+
         shapeView.layer.addSublayer(shapeLayer)
     }
     
@@ -193,6 +205,15 @@ class ViewController: UIViewController {
         basicAnimation.fillMode = CAMediaTimingFillMode.forwards
         basicAnimation.isRemovedOnCompletion = true
         shapeLayer.add(basicAnimation, forKey: "basicAnimation")
-        
+            
+    }
+    
+    func colorAnimation() {
+        if woorkLoop == true {
+            shapeLayer.strokeColor = UIColor.black.cgColor
+        } else {
+            shapeLayer.strokeColor = UIColor.green.cgColor
+        }
     }
 }
+
