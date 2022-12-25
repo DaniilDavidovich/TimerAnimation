@@ -176,6 +176,18 @@ class ViewController: UIViewController {
     }
     
     @objc func buttonResetPressed() {
+        if isStarted == true && isWorkTime == false && woorkLoop == true {
+            timer.invalidate()
+            resetAnimation()
+            durationTimer = 10
+            timerLabel.text = "\(durationTimer)"
+        } else if isStarted == true && isWorkTime == false && woorkLoop == false {
+            timer.invalidate()
+            resetAnimation()
+            durationTimer = 5
+            timerLabel.text = "\(durationTimer)"
+        }
+        
         
     }
     
@@ -184,6 +196,7 @@ class ViewController: UIViewController {
         durationTimer -= 1
         timerLabel.text = "\(durationTimer)"
         print(durationTimer)
+        
         
         if durationTimer == 0 && woorkLoop == true {
             print("timer to relax loop")
@@ -235,11 +248,15 @@ class ViewController: UIViewController {
     private func basicAnimation() {
         let basicAnimation = CABasicAnimation(keyPath: "strokeEnd")
         basicAnimation.toValue = 0
-        basicAnimation.duration = CFTimeInterval(durationTimer)
+        basicAnimation.duration = CFTimeInterval(self.durationTimer)
         basicAnimation.fillMode = CAMediaTimingFillMode.forwards
         basicAnimation.isRemovedOnCompletion = true
         shapeLayer.add(basicAnimation, forKey: "basicAnimation")
     
+    }
+    
+    func resetAnimation() {
+        basicAnimation()
     }
     
     func pauseAnimation(){
