@@ -191,10 +191,10 @@ class ViewController: UIViewController {
         let endEngel = (-CGFloat.pi / 2)
         let startEngel = 2 * CGFloat.pi + endEngel
         
-        let cercularPath = UIBezierPath(arcCenter: center, radius: 123, startAngle: startEngel, endAngle: endEngel, clockwise: false)
+        let cercularPath = UIBezierPath(arcCenter: center, radius: 123.07, startAngle: startEngel, endAngle: endEngel, clockwise: false)
         
         shapeLayer.path = cercularPath.cgPath
-        shapeLayer.lineWidth = 24.2
+        shapeLayer.lineWidth = 24.7
         shapeLayer.fillColor = UIColor.clear.cgColor
         shapeLayer.strokeEnd = 1
         shapeLayer.lineCap = CAShapeLayerLineCap.round
@@ -229,20 +229,20 @@ class ViewController: UIViewController {
         shapeLayer.beginTime = timeSincePause
     }
     
-    //MARK: - Setups Color
+    //MARK: - Setups Colors
     
-    var oneColorWork = #colorLiteral(red: 0.09821208566, green: 0.2465203106, blue: 0.4332227409, alpha: 1)
-    var twoColorWork = #colorLiteral(red: 0.09821208566, green: 0.2465203106, blue: 0.4332227409, alpha: 1)
-    var threeColorWork = #colorLiteral(red: 0.09821208566, green: 0.2465203106, blue: 0.4332227409, alpha: 1)
-    var fourColorWork = #colorLiteral(red: 0.09821208566, green: 0.2465203106, blue: 0.4332227409, alpha: 1)
-    var fiveColorWork = #colorLiteral(red: 0.09821208566, green: 0.2465203106, blue: 0.4332227409, alpha: 1)
+    var oneColorWork = #colorLiteral(red: 0.8627452254, green: 0.8627452254, blue: 0.8627452254, alpha: 1)
+    var twoColorWork = #colorLiteral(red: 0.4151946008, green: 0.395400703, blue: 0.3654464483, alpha: 1)
+    var threeColorWork = #colorLiteral(red: 0.9264768958, green: 0.6883662343, blue: 0.1297983527, alpha: 1)
+    var fourColorWork = #colorLiteral(red: 0.4151946008, green: 0.395400703, blue: 0.3654464483, alpha: 1)
+    var fiveColorWork = #colorLiteral(red: 0.1088501438, green: 0.1340978444, blue: 0.1635158956, alpha: 1)
     
-    var oneColorRelaxing = #colorLiteral(red: 0.09821208566, green: 0.2465203106, blue: 0.4332227409, alpha: 1)
-    var twoColorRelaxing = #colorLiteral(red: 0.09821208566, green: 0.2465203106, blue: 0.4332227409, alpha: 1)
-    var threeColorRelaxing = #colorLiteral(red: 0.09821208566, green: 0.2465203106, blue: 0.4332227409, alpha: 1)
-    var fourColorRelaxing = #colorLiteral(red: 0.09821208566, green: 0.2465203106, blue: 0.4332227409, alpha: 1)
-    var fiveColorRelaxing = #colorLiteral(red: 0.09821208566, green: 0.2465203106, blue: 0.4332227409, alpha: 1)
-    
+    var oneColorRelaxing = #colorLiteral(red: 0.9678950906, green: 0.8792178035, blue: 0.958201468, alpha: 1)
+    var twoColorRelaxing = #colorLiteral(red: 0.875171721, green: 0.825748384, blue: 0.9209445119, alpha: 1)
+    var threeColorRelaxing = #colorLiteral(red: 0.8918094039, green: 0.67772609, blue: 0.7940873504, alpha: 1)
+    var fourColorRelaxing = #colorLiteral(red: 0.6169006824, green: 0.7127228379, blue: 0.7795686126, alpha: 1)
+    var fiveColorRelaxing = #colorLiteral(red: 0.8242189884, green: 0.3782162666, blue: 0.5488271117, alpha: 1)
+
     func colorsElements() {
         if woorkLoop {
             view.backgroundColor = oneColorWork
