@@ -23,6 +23,15 @@ class ViewController: UIViewController {
     
     //MARK: - UI elements
     
+    private lazy var statusLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Working"
+        label.textAlignment = .center
+        label.font = .boldSystemFont(ofSize: 50)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private lazy var timerLabel: UILabel = {
         let label = UILabel()
         label.text = "\(durationTimer)"
@@ -35,7 +44,10 @@ class ViewController: UIViewController {
     
     private lazy var shapeView: UIImageView = {
         let ellipse = UIImageView()
-        ellipse.image = UIImage(systemName: "circle")
+        let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 3.7, weight: .medium, scale: .large)
+        let image = UIImage(systemName: "circle", withConfiguration: imageConfiguration)
+        ellipse.image = image
+        ellipse.tintColor = .gray
         ellipse.translatesAutoresizingMaskIntoConstraints = false
         return ellipse
     }()
@@ -75,15 +87,16 @@ class ViewController: UIViewController {
     //MARK: - Setups
     
     private func setupView() {
-        view.backgroundColor = .white
+        view.backgroundColor = .darkGray
+        
     }
     
     private func setupHierarchy() {
-        let subviews = [timerLabel,
+        let subviews = [statusLabel,
+                        timerLabel,
                         button,
                         buttonView,
                         shapeView
-                        
         ]
         subviews.forEach({ view.addSubview($0) })
         
@@ -93,13 +106,17 @@ class ViewController: UIViewController {
     private func setupLayout() {
         
         NSLayoutConstraint.activate([
+            
+            statusLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            statusLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -280),
+            
             timerLabel.centerXAnchor.constraint(equalTo: shapeView.centerXAnchor),
             timerLabel.centerYAnchor.constraint(equalTo: shapeView.centerYAnchor),
             
             shapeView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             shapeView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50),
-            shapeView.heightAnchor.constraint(equalToConstant: 300),
-            shapeView.widthAnchor.constraint(equalToConstant: 300),
+            shapeView.heightAnchor.constraint(equalToConstant: 305),
+            shapeView.widthAnchor.constraint(equalToConstant: 305),
             
             buttonView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             buttonView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 200),
@@ -153,17 +170,23 @@ class ViewController: UIViewController {
             timerLabel.text = "\(durationTimer)"
             timer.invalidate()
             buttonView.image = UIImage(systemName: "play")
+            statusLabel.text = "Relaxing"
+            statusLabel.textColor = .orange
+            timerLabel.textColor = .orange
             
             isStarted = false
             isWorkTime = false
             woorkLoop = false
             
         } else if durationTimer == 0 && woorkLoop == false {
-            print("timer to works loop ")
+            print("timer to works loop")
             durationTimer = 10
             timerLabel.text = "\(durationTimer)"
             timer.invalidate()
             buttonView.image = UIImage(systemName: "play")
+            statusLabel.text = "Working"
+            statusLabel.textColor = .black
+            timerLabel.textColor = .black
             
             isStarted = false
             isWorkTime = false
@@ -188,10 +211,10 @@ class ViewController: UIViewController {
         let endEngel = (-CGFloat.pi / 2)
         let startEngel = 2 * CGFloat.pi + endEngel
         
-        let cercularPath = UIBezierPath(arcCenter: center, radius: 121, startAngle: startEngel, endAngle: endEngel, clockwise: false)
+        let cercularPath = UIBezierPath(arcCenter: center, radius: 123, startAngle: startEngel, endAngle: endEngel, clockwise: false)
         
         shapeLayer.path = cercularPath.cgPath
-        shapeLayer.lineWidth = 21
+        shapeLayer.lineWidth = 24.2
         shapeLayer.fillColor = UIColor.clear.cgColor
         shapeLayer.strokeEnd = 1
         shapeLayer.lineCap = CAShapeLayerLineCap.round
@@ -213,7 +236,7 @@ class ViewController: UIViewController {
         if woorkLoop == true {
             shapeLayer.strokeColor = UIColor.black.cgColor
         } else {
-            shapeLayer.strokeColor = UIColor.green.cgColor
+            shapeLayer.strokeColor = UIColor.orange.cgColor
         }
     }
     
