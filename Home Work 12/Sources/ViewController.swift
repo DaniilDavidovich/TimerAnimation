@@ -35,10 +35,8 @@ class ViewController: UIViewController {
     private lazy var timerLabel: UILabel = {
         let label = UILabel()
         label.text = "\(durationTimer)"
-        label.textColor = .black
         label.font = .boldSystemFont(ofSize: 60)
         label.translatesAutoresizingMaskIntoConstraints = false
-        
         return label
     }()
     
@@ -47,14 +45,12 @@ class ViewController: UIViewController {
         let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 3.7, weight: .medium, scale: .large)
         let image = UIImage(systemName: "circle", withConfiguration: imageConfiguration)
         ellipse.image = image
-        ellipse.tintColor = .gray
         ellipse.translatesAutoresizingMaskIntoConstraints = false
         return ellipse
     }()
     
     private lazy var buttonView: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "play"))
-        
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -72,7 +68,6 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupView()
         setupHierarchy()
         setupLayout()
     }
@@ -80,16 +75,11 @@ class ViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         self.animationCircular()
-        self.colorAnimation()
+        self.colorsElements()
         
     }
     
     //MARK: - Setups
-    
-    private func setupView() {
-        view.backgroundColor = .darkGray
-        
-    }
     
     private func setupHierarchy() {
         let subviews = [statusLabel,
@@ -132,7 +122,8 @@ class ViewController: UIViewController {
         
     }
     
-    //MARK: - Action
+    //MARK: - Action Timer
+    
     @objc private func buttonPressed() {
         if isStarted == false && isWorkTime == false {
             basicAnimation()
@@ -171,8 +162,6 @@ class ViewController: UIViewController {
             timer.invalidate()
             buttonView.image = UIImage(systemName: "play")
             statusLabel.text = "Relaxing"
-            statusLabel.textColor = .orange
-            timerLabel.textColor = .orange
             
             isStarted = false
             isWorkTime = false
@@ -185,25 +174,16 @@ class ViewController: UIViewController {
             timer.invalidate()
             buttonView.image = UIImage(systemName: "play")
             statusLabel.text = "Working"
-            statusLabel.textColor = .black
-            timerLabel.textColor = .black
             
             isStarted = false
             isWorkTime = false
             woorkLoop = true
         }
         
-        func colorAnimation() {
-            if woorkLoop == true {
-                shapeLayer.strokeColor = UIColor.black.cgColor
-            } else {
-                shapeLayer.strokeColor = UIColor.green.cgColor
-            }
-        }
-        
     }
     
     //MARK: - Animation
+    
     private func animationCircular() {
         
         let center = CGPoint(x: shapeView.frame.height / 2, y: shapeView.frame.width / 2)
@@ -211,10 +191,10 @@ class ViewController: UIViewController {
         let endEngel = (-CGFloat.pi / 2)
         let startEngel = 2 * CGFloat.pi + endEngel
         
-        let cercularPath = UIBezierPath(arcCenter: center, radius: 123, startAngle: startEngel, endAngle: endEngel, clockwise: false)
+        let cercularPath = UIBezierPath(arcCenter: center, radius: 123.07, startAngle: startEngel, endAngle: endEngel, clockwise: false)
         
         shapeLayer.path = cercularPath.cgPath
-        shapeLayer.lineWidth = 24.2
+        shapeLayer.lineWidth = 24.7
         shapeLayer.fillColor = UIColor.clear.cgColor
         shapeLayer.strokeEnd = 1
         shapeLayer.lineCap = CAShapeLayerLineCap.round
@@ -232,15 +212,6 @@ class ViewController: UIViewController {
     
     }
     
-    func colorAnimation() {
-        if woorkLoop == true {
-            shapeLayer.strokeColor = UIColor.black.cgColor
-        } else {
-            shapeLayer.strokeColor = UIColor.orange.cgColor
-        }
-    }
-    
-    
     func pauseAnimation(){
         print("pause animation")
         let pausedTime = shapeLayer.convertTime(CACurrentMediaTime(), from: nil)
@@ -251,41 +222,49 @@ class ViewController: UIViewController {
     func resumeAnimation() {
         print("rusume animation")
         let pausedTime = shapeLayer.timeOffset
-        shapeLayer.speed = 1.0
+        shapeLayer.speed = 1
         shapeLayer.timeOffset = 0.0
         shapeLayer.beginTime = 0.0
         let timeSincePause = shapeLayer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
         shapeLayer.beginTime = timeSincePause
     }
     
+    //MARK: - Setups Colors
     
+    var oneColorWork = #colorLiteral(red: 0.8627452254, green: 0.8627452254, blue: 0.8627452254, alpha: 1)
+    var twoColorWork = #colorLiteral(red: 0.4151946008, green: 0.395400703, blue: 0.3654464483, alpha: 1)
+    var threeColorWork = #colorLiteral(red: 0.9264768958, green: 0.6883662343, blue: 0.1297983527, alpha: 1)
+    var fourColorWork = #colorLiteral(red: 0.4151946008, green: 0.395400703, blue: 0.3654464483, alpha: 1)
+    var fiveColorWork = #colorLiteral(red: 0.1088501438, green: 0.1340978444, blue: 0.1635158956, alpha: 1)
+    
+    var oneColorRelaxing = #colorLiteral(red: 0.9678950906, green: 0.8792178035, blue: 0.958201468, alpha: 1)
+    var twoColorRelaxing = #colorLiteral(red: 0.875171721, green: 0.825748384, blue: 0.9209445119, alpha: 1)
+    var threeColorRelaxing = #colorLiteral(red: 0.8918094039, green: 0.67772609, blue: 0.7940873504, alpha: 1)
+    var fourColorRelaxing = #colorLiteral(red: 0.6169006824, green: 0.7127228379, blue: 0.7795686126, alpha: 1)
+    var fiveColorRelaxing = #colorLiteral(red: 0.8242189884, green: 0.3782162666, blue: 0.5488271117, alpha: 1)
+
+    func colorsElements() {
+        if woorkLoop {
+            view.backgroundColor = oneColorWork
+            
+            shapeView.tintColor = twoColorWork
+            shapeLayer.strokeColor = threeColorWork.cgColor
+   
+            statusLabel.textColor = fiveColorWork
+            timerLabel.textColor = fiveColorWork
+            buttonView.tintColor = fiveColorWork
+        } else {
+            view.backgroundColor = oneColorRelaxing
+            
+            shapeView.tintColor = twoColorRelaxing
+            shapeLayer.strokeColor = threeColorRelaxing.cgColor
+   
+            statusLabel.textColor = fiveColorRelaxing
+            timerLabel.textColor = fiveColorRelaxing
+            buttonView.tintColor = fiveColorRelaxing
+        }
+    }
+  
 }
 
-
-//func pause() {
-//        guard
-//            isRunning,
-//            let presentation = progressShapeLayer.presentation()
-//        else {
-//            return
-//        }
-//
-//        elapsed += CACurrentMediaTime() - startTime
-//        progressShapeLayer.strokeEnd = presentation.strokeEnd
-//        progressShapeLayer.removeAnimation(forKey: animationKey)
-//    }
-//
-//    func resume() {
-//        guard !isRunning else { return }
-//
-//        isRunning = true
-//        startTime = CACurrentMediaTime()
-//        let animation = CABasicAnimation(keyPath: "strokeEnd")
-//        animation.fromValue = elapsed / duration
-//        animation.toValue = 1
-//        animation.duration = duration - elapsed
-//        animation.delegate = self
-//        progressShapeLayer.strokeEnd = 1
-//        progressShapeLayer.add(animation, forKey: animationKey)
-//    }
 
