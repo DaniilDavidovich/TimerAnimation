@@ -49,17 +49,31 @@ class ViewController: UIViewController {
         return ellipse
     }()
     
-    private lazy var buttonView: UIImageView = {
+    private lazy var buttonPlayView: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "play"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
-    private lazy var button: UIButton = {
+    private lazy var buttonPlay: UIButton = {
         let button = UIButton(type: .system)
         button.isEnabled = true
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
+        button.addTarget(self, action: #selector(buttonPlayPressed), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var buttonResetView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(systemName: "goforward"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private lazy var buttonReset: UIButton = {
+        let button = UIButton(type: .system)
+        button.isEnabled = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(buttonResetPressed), for: .touchUpInside)
         return button
     }()
     
@@ -84,8 +98,10 @@ class ViewController: UIViewController {
     private func setupHierarchy() {
         let subviews = [statusLabel,
                         timerLabel,
-                        button,
-                        buttonView,
+                        buttonPlay,
+                        buttonPlayView,
+                        buttonReset,
+                        buttonResetView,
                         shapeView
         ]
         subviews.forEach({ view.addSubview($0) })
@@ -98,42 +114,52 @@ class ViewController: UIViewController {
         NSLayoutConstraint.activate([
             
             statusLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            statusLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -280),
+            statusLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -260),
             
             timerLabel.centerXAnchor.constraint(equalTo: shapeView.centerXAnchor),
             timerLabel.centerYAnchor.constraint(equalTo: shapeView.centerYAnchor),
             
             shapeView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            shapeView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50),
+            shapeView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -20),
             shapeView.heightAnchor.constraint(equalToConstant: 305),
             shapeView.widthAnchor.constraint(equalToConstant: 305),
             
-            buttonView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            buttonView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 200),
-            buttonView.widthAnchor.constraint(equalToConstant: 90),
-            buttonView.heightAnchor.constraint(equalToConstant: 90),
+            buttonPlayView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 70),
+            buttonPlayView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 250),
+            buttonPlayView.widthAnchor.constraint(equalToConstant: 90),
+            buttonPlayView.heightAnchor.constraint(equalToConstant: 90),
             
-            button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            button.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 200),
-            button.widthAnchor.constraint(equalToConstant: 90),
-            button.heightAnchor.constraint(equalToConstant: 90)
+            buttonPlay.centerXAnchor.constraint(equalTo: buttonPlayView.centerXAnchor),
+            buttonPlay.centerYAnchor.constraint(equalTo: buttonPlayView.centerYAnchor),
+            buttonPlay.widthAnchor.constraint(equalToConstant: 90),
+            buttonPlay.heightAnchor.constraint(equalToConstant: 90),
             
+            buttonResetView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -70),
+            buttonResetView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 250),
+            buttonResetView.widthAnchor.constraint(equalToConstant: 90),
+            buttonResetView.heightAnchor.constraint(equalToConstant: 90),
+
+            buttonReset.centerXAnchor.constraint(equalTo: buttonResetView.centerXAnchor),
+            buttonReset.centerYAnchor.constraint(equalTo: buttonResetView.centerYAnchor),
+            buttonReset.widthAnchor.constraint(equalToConstant: 90),
+            buttonReset.heightAnchor.constraint(equalToConstant: 90)
+//
         ])
         
     }
     
     //MARK: - Action Timer
     
-    @objc private func buttonPressed() {
+    @objc private func buttonPlayPressed() {
         if isStarted == false && isWorkTime == false {
             basicAnimation()
             timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerActive), userInfo: nil, repeats: true)
             isStarted = true
             isWorkTime = true
-            buttonView.image = UIImage(systemName: "pause")
+            buttonPlayView.image = UIImage(systemName: "pause")
             print("start")
         } else if isStarted == true && isWorkTime == true {
-            buttonView.image = UIImage(systemName: "play")
+            buttonPlayView.image = UIImage(systemName: "play")
             timer.invalidate()
             isWorkTime = false
             print("pause")
@@ -144,8 +170,12 @@ class ViewController: UIViewController {
             isStarted = true
             isWorkTime = true
             print("start after pause ")
-            buttonView.image = UIImage(systemName: "pause")
+            buttonPlayView.image = UIImage(systemName: "pause")
         }
+        
+    }
+    
+    @objc func buttonResetPressed() {
         
     }
     
@@ -160,7 +190,7 @@ class ViewController: UIViewController {
             durationTimer = 5
             timerLabel.text = "\(durationTimer)"
             timer.invalidate()
-            buttonView.image = UIImage(systemName: "play")
+            buttonPlayView.image = UIImage(systemName: "play")
             statusLabel.text = "Relaxing"
             
             isStarted = false
@@ -172,7 +202,7 @@ class ViewController: UIViewController {
             durationTimer = 10
             timerLabel.text = "\(durationTimer)"
             timer.invalidate()
-            buttonView.image = UIImage(systemName: "play")
+            buttonPlayView.image = UIImage(systemName: "play")
             statusLabel.text = "Working"
             
             isStarted = false
@@ -252,7 +282,8 @@ class ViewController: UIViewController {
    
             statusLabel.textColor = fiveColorWork
             timerLabel.textColor = fiveColorWork
-            buttonView.tintColor = fiveColorWork
+            buttonPlayView.tintColor = fiveColorWork
+            buttonResetView.tintColor = fiveColorWork
         } else {
             view.backgroundColor = oneColorRelaxing
             
@@ -261,7 +292,8 @@ class ViewController: UIViewController {
    
             statusLabel.textColor = fiveColorRelaxing
             timerLabel.textColor = fiveColorRelaxing
-            buttonView.tintColor = fiveColorRelaxing
+            buttonPlayView.tintColor = fiveColorRelaxing
+            buttonResetView.tintColor = fiveColorRelaxing
         }
     }
   
