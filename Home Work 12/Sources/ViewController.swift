@@ -10,7 +10,7 @@ import UIKit
 class ViewController: UIViewController {
     
     //MARK: - Elements To Timer and Animation
-    
+
     private var timer = Timer()
     private var durationTimer = 10
     
@@ -18,7 +18,8 @@ class ViewController: UIViewController {
     private var isStarted = false
     private var woorkLoop = true
     
-    let shapeLayer = CAShapeLayer()
+    private let shapeLayer = CAShapeLayer()
+    private var elapsed: CFTimeInterval = 0
     
     //MARK: - UI elements
     
@@ -53,7 +54,6 @@ class ViewController: UIViewController {
         button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
         return button
     }()
-    
     
     
     //MARK: - Lyfecycle
@@ -129,9 +129,10 @@ class ViewController: UIViewController {
             timer.invalidate()
             isWorkTime = false
             print("pause")
+            pauseAnimation()
         } else if isStarted == true && isWorkTime == false {
-            basicAnimation()
             timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerActive), userInfo: nil, repeats: true)
+            resumeAnimation()
             isStarted = true
             isWorkTime = true
             print("start after pause ")
@@ -205,7 +206,7 @@ class ViewController: UIViewController {
         basicAnimation.fillMode = CAMediaTimingFillMode.forwards
         basicAnimation.isRemovedOnCompletion = true
         shapeLayer.add(basicAnimation, forKey: "basicAnimation")
-            
+    
     }
     
     func colorAnimation() {
@@ -215,5 +216,53 @@ class ViewController: UIViewController {
             shapeLayer.strokeColor = UIColor.green.cgColor
         }
     }
+    
+    
+    func pauseAnimation(){
+        print("pause animation")
+        let pausedTime = shapeLayer.convertTime(CACurrentMediaTime(), from: nil)
+        shapeLayer.speed = 0.0
+        shapeLayer.timeOffset = pausedTime
+    }
+    
+    func resumeAnimation() {
+        print("rusume animation")
+        let pausedTime = shapeLayer.timeOffset
+        shapeLayer.speed = 1.0
+        shapeLayer.timeOffset = 0.0
+        shapeLayer.beginTime = 0.0
+        let timeSincePause = shapeLayer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
+        shapeLayer.beginTime = timeSincePause
+    }
+    
+    
 }
+
+
+//func pause() {
+//        guard
+//            isRunning,
+//            let presentation = progressShapeLayer.presentation()
+//        else {
+//            return
+//        }
+//
+//        elapsed += CACurrentMediaTime() - startTime
+//        progressShapeLayer.strokeEnd = presentation.strokeEnd
+//        progressShapeLayer.removeAnimation(forKey: animationKey)
+//    }
+//
+//    func resume() {
+//        guard !isRunning else { return }
+//
+//        isRunning = true
+//        startTime = CACurrentMediaTime()
+//        let animation = CABasicAnimation(keyPath: "strokeEnd")
+//        animation.fromValue = elapsed / duration
+//        animation.toValue = 1
+//        animation.duration = duration - elapsed
+//        animation.delegate = self
+//        progressShapeLayer.strokeEnd = 1
+//        progressShapeLayer.add(animation, forKey: animationKey)
+//    }
 
