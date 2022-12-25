@@ -12,14 +12,14 @@ class ViewController: UIViewController {
     //MARK: - Elements To Timer and Animation
 
     private var timer = Timer()
-    private var durationTimer = 10
+    private var time = 10
+    private var durationTimer = 1000
     
     private var isWorkTime = false
     private var isStarted = false
     private var woorkLoop = true
     
     private let shapeLayer = CAShapeLayer()
-    private var elapsed: CFTimeInterval = 0
     
     //MARK: - UI elements
     
@@ -34,7 +34,8 @@ class ViewController: UIViewController {
     
     private lazy var timerLabel: UILabel = {
         let label = UILabel()
-        label.text = "\(durationTimer)"
+        label.text = ("\(time)")
+        label.text = formatTimer()
         label.font = .boldSystemFont(ofSize: 60)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -43,8 +44,8 @@ class ViewController: UIViewController {
     private lazy var shapeView: UIImageView = {
         let ellipse = UIImageView()
         let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 3.7, weight: .medium, scale: .large)
-        let image = UIImage(systemName: "circle", withConfiguration: imageConfiguration)
-        ellipse.image = image
+//        let image = UIImage(systemName: "circle", withConfiguration: imageConfiguration)
+//        ellipse.image = image
         ellipse.translatesAutoresizingMaskIntoConstraints = false
         return ellipse
     }()
@@ -88,7 +89,6 @@ class ViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.animationCircular()
         self.colorsElements()
         
     }
@@ -150,143 +150,78 @@ class ViewController: UIViewController {
     
     //MARK: - Action Timer
     
+    func formatTimer() -> String {
+        let time = Double(time)
+        let formatter = DateComponentsFormatter()
+        formatter.zeroFormattingBehavior = .pad
+        formatter.allowedUnits = [.minute, .second]
+        return formatter.string(from: time) ?? "00:00"
+    }
+    
     @objc private func buttonPlayPressed() {
-        if isStarted == false && isWorkTime == false {
-            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerActive), userInfo: nil, repeats: true)
-            basicAnimation()
+        if isStarted == false {
+            timer = Timer.scheduledTimer(timeInterval: 0.001, target: self, selector: #selector(timerActive), userInfo: nil, repeats: true)
+            timerLabel.text = formatTimer()
             isStarted = true
-            isWorkTime = true
             buttonPlayView.image = UIImage(systemName: "pause")
             print("start timer")
-        } else if isStarted == true && isWorkTime == true {
+        } else if isStarted == true {
             buttonPlayView.image = UIImage(systemName: "play")
             timer.invalidate()
-            isWorkTime = false
+            isStarted = false
             print("pause timer")
-            pauseAnimation()
-        } else if isStarted == true && isWorkTime == false {
-            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerActive), userInfo: nil, repeats: true)
-            resumeAnimation()
-            isStarted = true
-            isWorkTime = true
-            print("start after pause timer")
-            buttonPlayView.image = UIImage(systemName: "pause")
+            shapeLayer.removeAnimation(forKey: "basicAnimation")
         }
         
     }
     
     @objc func timerActive() {
         
-        durationTimer -= 1
-        timerLabel.text = "\(durationTimer)"
-        print(durationTimer)
+        if durationTimer > 0 {
+            durationTimer -= 1
+            return
+        }
         
+        durationTimer = 1000
         
-        if durationTimer == 0 && woorkLoop == true {
+        time -= 1
+        timerLabel.text = formatTimer()
+        print(time)
+        
+        if time < 1 && woorkLoop == true {
             print("timer to relax loop")
-            durationTimer = 5
-            timerLabel.text = "\(durationTimer)"
-            timer.invalidate()
-            buttonPlayView.image = UIImage(systemName: "play")
             statusLabel.text = "Relaxing"
-            
-            isStarted = false
-            isWorkTime = false
+            time = 5
+            timerLabel.text = ("\(time)")
             woorkLoop = false
             
-        } else if durationTimer == 0 && woorkLoop == false {
+        } else if time < 1 && woorkLoop == false {
             print("timer to works loop")
-            durationTimer = 10
-            timerLabel.text = "\(durationTimer)"
-            timer.invalidate()
-            buttonPlayView.image = UIImage(systemName: "play")
             statusLabel.text = "Working"
-            
-            isStarted = false
-            isWorkTime = false
+            time = 10
+            timerLabel.text = ("\(time)")
             woorkLoop = true
         }
+        timerLabel.text = formatTimer()
+        
     }
     
     @objc func buttonResetPressed() {
-        if isStarted == true && isWorkTime == false && woorkLoop == true {
-            timer.invalidate()
-            durationTimer = 10
-            timerLabel.text = "\(durationTimer)"
-            isWorkTime = false
-            isStarted = false
-            print("\(isStarted)")
-            print("\(isWorkTime)")
-            print("reset timer")
-        } else if isStarted == true && isWorkTime == false && woorkLoop == false {
-            timer.invalidate()
-            durationTimer = 5
-            timerLabel.text = "\(durationTimer)"
-            isWorkTime = false
-            isStarted = false
-            print("reset timer")
+        durationTimer = 1000
+        if woorkLoop == true {
+            time = 10
+            timerLabel.text = ("\(time)")
+        } else {
+            durationTimer = 1000
+            time = 5
+            timerLabel.text = ("\(time)")
         }
-        
+        timerLabel.text = formatTimer()
+        print("reset timer")
         
     }
     
-    //MARK: - Animation
-    
-    private func animationCircular() {
-        
-        let center = CGPoint(x: shapeView.frame.height / 2, y: shapeView.frame.width / 2)
-        
-        let endEngel = (-CGFloat.pi / 2)
-        let startEngel = 2 * CGFloat.pi + endEngel
-        
-        let cercularPath = UIBezierPath(arcCenter: center, radius: 123.07, startAngle: startEngel, endAngle: endEngel, clockwise: false)
-        
-        shapeLayer.path = cercularPath.cgPath
-        shapeLayer.lineWidth = 24.7
-        shapeLayer.fillColor = UIColor.clear.cgColor
-        shapeLayer.strokeEnd = 1
-        shapeLayer.lineCap = CAShapeLayerLineCap.round
 
-        shapeView.layer.addSublayer(shapeLayer)
-    }
-    
-    private func basicAnimation() {
-        let basicAnimation = CABasicAnimation(keyPath: "strokeEnd")
-        basicAnimation.toValue = 0
-        basicAnimation.duration = CFTimeInterval(durationTimer)
-        basicAnimation.fillMode = CAMediaTimingFillMode.forwards
-        basicAnimation.isRemovedOnCompletion = true
-        shapeLayer.add(basicAnimation, forKey: "basicAnimation")
-        print("create animation")
-    }
-    
-    func resetAnimation() {
-        let basicAnimation = CABasicAnimation(keyPath: "strokeEnd")
-        basicAnimation.toValue = 10
-        basicAnimation.duration = CFTimeInterval(durationTimer)
-        basicAnimation.fillMode = CAMediaTimingFillMode.forwards
-        basicAnimation.isRemovedOnCompletion = true
-        shapeLayer.add(basicAnimation, forKey: "basicAnimation")
-        print("create animation")
-    }
-    
-    func pauseAnimation(){
-        print("pause animation")
-        let pausedTime = shapeLayer.convertTime(CACurrentMediaTime(), from: nil)
-        shapeLayer.speed = 0.0
-        shapeLayer.timeOffset = pausedTime
-    }
-    
-    func resumeAnimation() {
-        print("rusume animation")
-        let pausedTime = shapeLayer.timeOffset
-        shapeLayer.speed = 1
-        shapeLayer.timeOffset = 0.0
-        shapeLayer.beginTime = 0.0
-        let timeSincePause = shapeLayer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
-        shapeLayer.beginTime = timeSincePause
-    }
-    
     //MARK: - Setups Colors
     
     var oneColorWork = #colorLiteral(red: 0.8627452254, green: 0.8627452254, blue: 0.8627452254, alpha: 1)
