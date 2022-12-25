@@ -10,16 +10,21 @@ import UIKit
 class ViewController: UIViewController {
     
     //MARK: - Elements To Timer and Animation
+    
+    enum TimerNumber {
+        static let timeWork = 8
+        static let timeRelax = 3
+    }
 
     private var timer = Timer()
-    private var durationTimer = 10
+    private var time = TimerNumber.timeWork
+    private var durationTimer = 1000
     
     private var isWorkTime = false
     private var isStarted = false
     private var woorkLoop = true
     
     private let shapeLayer = CAShapeLayer()
-    private var elapsed: CFTimeInterval = 0
     
     //MARK: - UI elements
     
@@ -34,7 +39,8 @@ class ViewController: UIViewController {
     
     private lazy var timerLabel: UILabel = {
         let label = UILabel()
-        label.text = "\(durationTimer)"
+        label.text = ("\(time)")
+        label.text = formatTimer()
         label.font = .boldSystemFont(ofSize: 60)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -43,23 +49,37 @@ class ViewController: UIViewController {
     private lazy var shapeView: UIImageView = {
         let ellipse = UIImageView()
         let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 3.7, weight: .medium, scale: .large)
-        let image = UIImage(systemName: "circle", withConfiguration: imageConfiguration)
-        ellipse.image = image
+//        let image = UIImage(systemName: "circle", withConfiguration: imageConfiguration)
+//        ellipse.image = image
         ellipse.translatesAutoresizingMaskIntoConstraints = false
         return ellipse
     }()
     
-    private lazy var buttonView: UIImageView = {
+    private lazy var buttonPlayView: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "play"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
-    private lazy var button: UIButton = {
+    private lazy var buttonPlay: UIButton = {
         let button = UIButton(type: .system)
         button.isEnabled = true
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
+        button.addTarget(self, action: #selector(buttonPlayPressed), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var buttonResetView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(systemName: "goforward"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private lazy var buttonReset: UIButton = {
+        let button = UIButton(type: .system)
+        button.isEnabled = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(buttonResetPressed), for: .touchUpInside)
         return button
     }()
     
@@ -74,7 +94,6 @@ class ViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.animationCircular()
         self.colorsElements()
         
     }
@@ -84,8 +103,10 @@ class ViewController: UIViewController {
     private func setupHierarchy() {
         let subviews = [statusLabel,
                         timerLabel,
-                        button,
-                        buttonView,
+                        buttonPlay,
+                        buttonPlayView,
+                        buttonReset,
+                        buttonResetView,
                         shapeView
         ]
         subviews.forEach({ view.addSubview($0) })
@@ -98,137 +119,114 @@ class ViewController: UIViewController {
         NSLayoutConstraint.activate([
             
             statusLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            statusLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -280),
+            statusLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -260),
             
             timerLabel.centerXAnchor.constraint(equalTo: shapeView.centerXAnchor),
             timerLabel.centerYAnchor.constraint(equalTo: shapeView.centerYAnchor),
             
             shapeView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            shapeView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50),
+            shapeView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -20),
             shapeView.heightAnchor.constraint(equalToConstant: 305),
             shapeView.widthAnchor.constraint(equalToConstant: 305),
             
-            buttonView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            buttonView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 200),
-            buttonView.widthAnchor.constraint(equalToConstant: 90),
-            buttonView.heightAnchor.constraint(equalToConstant: 90),
+            buttonPlayView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 70),
+            buttonPlayView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 250),
+            buttonPlayView.widthAnchor.constraint(equalToConstant: 90),
+            buttonPlayView.heightAnchor.constraint(equalToConstant: 90),
             
-            button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            button.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 200),
-            button.widthAnchor.constraint(equalToConstant: 90),
-            button.heightAnchor.constraint(equalToConstant: 90)
+            buttonPlay.centerXAnchor.constraint(equalTo: buttonPlayView.centerXAnchor),
+            buttonPlay.centerYAnchor.constraint(equalTo: buttonPlayView.centerYAnchor),
+            buttonPlay.widthAnchor.constraint(equalToConstant: 90),
+            buttonPlay.heightAnchor.constraint(equalToConstant: 90),
             
+            buttonResetView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -70),
+            buttonResetView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 250),
+            buttonResetView.widthAnchor.constraint(equalToConstant: 90),
+            buttonResetView.heightAnchor.constraint(equalToConstant: 90),
+
+            buttonReset.centerXAnchor.constraint(equalTo: buttonResetView.centerXAnchor),
+            buttonReset.centerYAnchor.constraint(equalTo: buttonResetView.centerYAnchor),
+            buttonReset.widthAnchor.constraint(equalToConstant: 90),
+            buttonReset.heightAnchor.constraint(equalToConstant: 90)
+//
         ])
         
     }
     
     //MARK: - Action Timer
     
-    @objc private func buttonPressed() {
-        if isStarted == false && isWorkTime == false {
-            basicAnimation()
-            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerActive), userInfo: nil, repeats: true)
+    func formatTimer() -> String {
+        let time = Double(time)
+        let formatter = DateComponentsFormatter()
+        formatter.zeroFormattingBehavior = .pad
+        formatter.allowedUnits = [.minute, .second]
+        return formatter.string(from: time) ?? "00:00"
+    }
+    
+    @objc private func buttonPlayPressed() {
+        if isStarted == false {
+            timer = Timer.scheduledTimer(timeInterval: 0.001, target: self, selector: #selector(timerActive), userInfo: nil, repeats: true)
+            timerLabel.text = formatTimer()
             isStarted = true
-            isWorkTime = true
-            buttonView.image = UIImage(systemName: "pause")
-            print("start")
-        } else if isStarted == true && isWorkTime == true {
-            buttonView.image = UIImage(systemName: "play")
+            buttonPlayView.image = UIImage(systemName: "pause")
+            print("start timer")
+        } else if isStarted == true {
+            buttonPlayView.image = UIImage(systemName: "play")
             timer.invalidate()
-            isWorkTime = false
-            print("pause")
-            pauseAnimation()
-        } else if isStarted == true && isWorkTime == false {
-            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerActive), userInfo: nil, repeats: true)
-            resumeAnimation()
-            isStarted = true
-            isWorkTime = true
-            print("start after pause ")
-            buttonView.image = UIImage(systemName: "pause")
+            isStarted = false
+            print("pause timer")
+            shapeLayer.removeAnimation(forKey: "basicAnimation")
         }
         
     }
     
     @objc func timerActive() {
         
-        durationTimer -= 1
-        timerLabel.text = "\(durationTimer)"
-        print(durationTimer)
-        
-        if durationTimer == 0 && woorkLoop == true {
-            print("timer to relax loop")
-            durationTimer = 5
-            timerLabel.text = "\(durationTimer)"
-            timer.invalidate()
-            buttonView.image = UIImage(systemName: "play")
-            statusLabel.text = "Relaxing"
-            
-            isStarted = false
-            isWorkTime = false
-            woorkLoop = false
-            
-        } else if durationTimer == 0 && woorkLoop == false {
-            print("timer to works loop")
-            durationTimer = 10
-            timerLabel.text = "\(durationTimer)"
-            timer.invalidate()
-            buttonView.image = UIImage(systemName: "play")
-            statusLabel.text = "Working"
-            
-            isStarted = false
-            isWorkTime = false
-            woorkLoop = true
+        if durationTimer > 0 {
+            durationTimer -= 1
+            return
         }
         
+        durationTimer = 1000
+        
+        time -= 1
+        timerLabel.text = formatTimer()
+        print(time)
+        
+        if time < 1 && woorkLoop == true {
+            print("timer to relax loop")
+            statusLabel.text = "Relaxing"
+            time = TimerNumber.timeRelax
+            timerLabel.text = ("\(time)")
+            woorkLoop = false
+            
+        } else if time < 1 && woorkLoop == false {
+            print("timer to works loop")
+            statusLabel.text = "Working"
+            time = TimerNumber.timeWork
+            timerLabel.text = ("\(time)")
+            woorkLoop = true
+        }
+        timerLabel.text = formatTimer()
+        
     }
     
-    //MARK: - Animation
+    @objc func buttonResetPressed() {
+        durationTimer = 1000
+        if woorkLoop == true {
+            time = TimerNumber.timeWork
+            timerLabel.text = ("\(time)")
+        } else {
+            durationTimer = 1000
+            time = TimerNumber.timeRelax
+            timerLabel.text = ("\(time)")
+        }
+        timerLabel.text = formatTimer()
+        print("reset timer")
+        
+    }
     
-    private func animationCircular() {
-        
-        let center = CGPoint(x: shapeView.frame.height / 2, y: shapeView.frame.width / 2)
-        
-        let endEngel = (-CGFloat.pi / 2)
-        let startEngel = 2 * CGFloat.pi + endEngel
-        
-        let cercularPath = UIBezierPath(arcCenter: center, radius: 123.07, startAngle: startEngel, endAngle: endEngel, clockwise: false)
-        
-        shapeLayer.path = cercularPath.cgPath
-        shapeLayer.lineWidth = 24.7
-        shapeLayer.fillColor = UIColor.clear.cgColor
-        shapeLayer.strokeEnd = 1
-        shapeLayer.lineCap = CAShapeLayerLineCap.round
 
-        shapeView.layer.addSublayer(shapeLayer)
-    }
-    
-    private func basicAnimation() {
-        let basicAnimation = CABasicAnimation(keyPath: "strokeEnd")
-        basicAnimation.toValue = 0
-        basicAnimation.duration = CFTimeInterval(durationTimer)
-        basicAnimation.fillMode = CAMediaTimingFillMode.forwards
-        basicAnimation.isRemovedOnCompletion = true
-        shapeLayer.add(basicAnimation, forKey: "basicAnimation")
-    
-    }
-    
-    func pauseAnimation(){
-        print("pause animation")
-        let pausedTime = shapeLayer.convertTime(CACurrentMediaTime(), from: nil)
-        shapeLayer.speed = 0.0
-        shapeLayer.timeOffset = pausedTime
-    }
-    
-    func resumeAnimation() {
-        print("rusume animation")
-        let pausedTime = shapeLayer.timeOffset
-        shapeLayer.speed = 1
-        shapeLayer.timeOffset = 0.0
-        shapeLayer.beginTime = 0.0
-        let timeSincePause = shapeLayer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
-        shapeLayer.beginTime = timeSincePause
-    }
-    
     //MARK: - Setups Colors
     
     var oneColorWork = #colorLiteral(red: 0.8627452254, green: 0.8627452254, blue: 0.8627452254, alpha: 1)
@@ -252,7 +250,8 @@ class ViewController: UIViewController {
    
             statusLabel.textColor = fiveColorWork
             timerLabel.textColor = fiveColorWork
-            buttonView.tintColor = fiveColorWork
+            buttonPlayView.tintColor = fiveColorWork
+            buttonResetView.tintColor = fiveColorWork
         } else {
             view.backgroundColor = oneColorRelaxing
             
@@ -261,7 +260,8 @@ class ViewController: UIViewController {
    
             statusLabel.textColor = fiveColorRelaxing
             timerLabel.textColor = fiveColorRelaxing
-            buttonView.tintColor = fiveColorRelaxing
+            buttonPlayView.tintColor = fiveColorRelaxing
+            buttonResetView.tintColor = fiveColorRelaxing
         }
     }
   
