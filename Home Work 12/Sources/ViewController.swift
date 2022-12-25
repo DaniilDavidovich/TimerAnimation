@@ -152,42 +152,26 @@ class ViewController: UIViewController {
     
     @objc private func buttonPlayPressed() {
         if isStarted == false && isWorkTime == false {
-            basicAnimation()
             timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerActive), userInfo: nil, repeats: true)
+            basicAnimation()
             isStarted = true
             isWorkTime = true
             buttonPlayView.image = UIImage(systemName: "pause")
-            print("start")
+            print("start timer")
         } else if isStarted == true && isWorkTime == true {
             buttonPlayView.image = UIImage(systemName: "play")
             timer.invalidate()
             isWorkTime = false
-            print("pause")
+            print("pause timer")
             pauseAnimation()
         } else if isStarted == true && isWorkTime == false {
             timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerActive), userInfo: nil, repeats: true)
             resumeAnimation()
             isStarted = true
             isWorkTime = true
-            print("start after pause ")
+            print("start after pause timer")
             buttonPlayView.image = UIImage(systemName: "pause")
         }
-        
-    }
-    
-    @objc func buttonResetPressed() {
-        if isStarted == true && isWorkTime == false && woorkLoop == true {
-            timer.invalidate()
-            resetAnimation()
-            durationTimer = 10
-            timerLabel.text = "\(durationTimer)"
-        } else if isStarted == true && isWorkTime == false && woorkLoop == false {
-            timer.invalidate()
-            resetAnimation()
-            durationTimer = 5
-            timerLabel.text = "\(durationTimer)"
-        }
-        
         
     }
     
@@ -222,6 +206,27 @@ class ViewController: UIViewController {
             isWorkTime = false
             woorkLoop = true
         }
+    }
+    
+    @objc func buttonResetPressed() {
+        if isStarted == true && isWorkTime == false && woorkLoop == true {
+            timer.invalidate()
+            durationTimer = 10
+            timerLabel.text = "\(durationTimer)"
+            isWorkTime = false
+            isStarted = false
+            print("\(isStarted)")
+            print("\(isWorkTime)")
+            print("reset timer")
+        } else if isStarted == true && isWorkTime == false && woorkLoop == false {
+            timer.invalidate()
+            durationTimer = 5
+            timerLabel.text = "\(durationTimer)"
+            isWorkTime = false
+            isStarted = false
+            print("reset timer")
+        }
+        
         
     }
     
@@ -248,15 +253,21 @@ class ViewController: UIViewController {
     private func basicAnimation() {
         let basicAnimation = CABasicAnimation(keyPath: "strokeEnd")
         basicAnimation.toValue = 0
-        basicAnimation.duration = CFTimeInterval(self.durationTimer)
+        basicAnimation.duration = CFTimeInterval(durationTimer)
         basicAnimation.fillMode = CAMediaTimingFillMode.forwards
         basicAnimation.isRemovedOnCompletion = true
         shapeLayer.add(basicAnimation, forKey: "basicAnimation")
-    
+        print("create animation")
     }
     
     func resetAnimation() {
-        basicAnimation()
+        let basicAnimation = CABasicAnimation(keyPath: "strokeEnd")
+        basicAnimation.toValue = 10
+        basicAnimation.duration = CFTimeInterval(durationTimer)
+        basicAnimation.fillMode = CAMediaTimingFillMode.forwards
+        basicAnimation.isRemovedOnCompletion = true
+        shapeLayer.add(basicAnimation, forKey: "basicAnimation")
+        print("create animation")
     }
     
     func pauseAnimation(){
