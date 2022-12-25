@@ -10,9 +10,14 @@ import UIKit
 class ViewController: UIViewController {
     
     //MARK: - Elements To Timer and Animation
+    
+    enum TimerNumber {
+        static let timeWork = 8
+        static let timeRelax = 3
+    }
 
     private var timer = Timer()
-    private var time = 10
+    private var time = TimerNumber.timeWork
     private var durationTimer = 1000
     
     private var isWorkTime = false
@@ -191,14 +196,14 @@ class ViewController: UIViewController {
         if time < 1 && woorkLoop == true {
             print("timer to relax loop")
             statusLabel.text = "Relaxing"
-            time = 5
+            time = TimerNumber.timeRelax
             timerLabel.text = ("\(time)")
             woorkLoop = false
             
         } else if time < 1 && woorkLoop == false {
             print("timer to works loop")
             statusLabel.text = "Working"
-            time = 10
+            time = TimerNumber.timeWork
             timerLabel.text = ("\(time)")
             woorkLoop = true
         }
@@ -209,11 +214,11 @@ class ViewController: UIViewController {
     @objc func buttonResetPressed() {
         durationTimer = 1000
         if woorkLoop == true {
-            time = 10
+            time = TimerNumber.timeWork
             timerLabel.text = ("\(time)")
         } else {
             durationTimer = 1000
-            time = 5
+            time = TimerNumber.timeRelax
             timerLabel.text = ("\(time)")
         }
         timerLabel.text = formatTimer()
