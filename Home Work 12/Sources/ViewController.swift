@@ -256,7 +256,7 @@ class ViewController: UIViewController {
         func creatingCircularPath() {
         
         let center: CGPoint = CGPoint(x: shapeView.frame.height / 2, y: shapeView.frame.width / 2)
-        let circularPath = UIBezierPath(arcCenter: center, radius: 128, startAngle: startPoint, endAngle: endPoint, clockwise: false)
+        let circularPath = UIBezierPath(arcCenter: center, radius: 128, startAngle: startPoint, endAngle: endPoint, clockwise: true)
         
         circleLayer.path = circularPath.cgPath
         circleLayer.fillColor = UIColor.clear.cgColor
