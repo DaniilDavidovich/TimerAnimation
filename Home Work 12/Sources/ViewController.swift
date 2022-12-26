@@ -12,7 +12,7 @@ class ViewController: UIViewController {
     //MARK: - Elements To Timer and Animation
     
     enum TimerNumber {
-        static let timeWork = 8
+        static let timeWork = 3
         static let timeRelax = 3
     }
 
@@ -95,6 +95,7 @@ class ViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         self.colorsElements()
+        self.creatingCircularPath()
         
     }
     
@@ -169,13 +170,18 @@ class ViewController: UIViewController {
             timerLabel.text = formatTimer()
             isStarted = true
             buttonPlayView.image = UIImage(systemName: "pause")
+            progressAnimation(duration: TimeInterval(time))
             print("start timer")
         } else if isStarted == true {
-            buttonPlayView.image = UIImage(systemName: "play")
             timer.invalidate()
+            if let presentation = progressLayer.presentation() {
+                progressLayer.strokeEnd = presentation.strokeEnd
+            }
+            progressLayer.removeAnimation(forKey: "progressAnimation")
+            buttonPlayView.image = UIImage(systemName: "play")
             isStarted = false
             print("pause timer")
-            shapeLayer.removeAnimation(forKey: "basicAnimation")
+            
         }
         
     }
@@ -189,6 +195,7 @@ class ViewController: UIViewController {
         
         durationTimer = 1000
         
+        
         time -= 1
         timerLabel.text = formatTimer()
         print(time)
@@ -199,6 +206,8 @@ class ViewController: UIViewController {
             time = TimerNumber.timeRelax
             timerLabel.text = ("\(time)")
             woorkLoop = false
+            colorsElements()
+            progressAnimation(duration: TimeInterval(time))
             
         } else if time < 1 && woorkLoop == false {
             print("timer to works loop")
@@ -206,6 +215,8 @@ class ViewController: UIViewController {
             time = TimerNumber.timeWork
             timerLabel.text = ("\(time)")
             woorkLoop = true
+            colorsElements()
+            progressAnimation(duration: TimeInterval(time))
         }
         timerLabel.text = formatTimer()
         
@@ -216,15 +227,62 @@ class ViewController: UIViewController {
         if woorkLoop == true {
             time = TimerNumber.timeWork
             timerLabel.text = ("\(time)")
+            isStartedCheck()
         } else {
             durationTimer = 1000
             time = TimerNumber.timeRelax
             timerLabel.text = ("\(time)")
+            isStartedCheck()
         }
         timerLabel.text = formatTimer()
         print("reset timer")
         
     }
+    
+    func isStartedCheck() {
+        if isStarted {
+            progressAnimation(duration: TimeInterval(time))
+        }
+    }
+    
+    //MARK: - Animate
+    
+    private let circleLayer = CAShapeLayer()
+    private var progressLayer = CAShapeLayer()
+    private var startPoint = CGFloat(-Double.pi / 2)
+    private var endPoint = CGFloat(3 * Double.pi / 2)
+    
+    
+        func creatingCircularPath() {
+        
+        let center: CGPoint = CGPoint(x: shapeView.frame.height / 2, y: shapeView.frame.width / 2)
+        let circularPath = UIBezierPath(arcCenter: center, radius: 128, startAngle: startPoint, endAngle: endPoint, clockwise: true)
+        
+        circleLayer.path = circularPath.cgPath
+        circleLayer.fillColor = UIColor.clear.cgColor
+        circleLayer.lineCap = .round
+        circleLayer.lineWidth = 23
+        circleLayer.strokeEnd = 1
+        shapeView.layer.addSublayer(circleLayer)
+        
+        progressLayer.path = circularPath.cgPath
+        progressLayer.fillColor = UIColor.clear.cgColor
+        progressLayer.lineCap = .butt
+        progressLayer.lineWidth = 23
+        progressLayer.strokeEnd = 1
+        shapeView.layer.addSublayer(progressLayer)
+        
+    }
+    
+    func progressAnimation(duration: TimeInterval) {
+        let circularAnimation = CABasicAnimation(keyPath: "strokeEnd")
+        circularAnimation.duration = duration
+        circularAnimation.toValue = 0
+        circularAnimation.fillMode = .forwards
+        circularAnimation.isRemovedOnCompletion = false
+        progressLayer.add(circularAnimation, forKey: "progressAnimation")
+    }
+    
     
 
     //MARK: - Setups Colors
@@ -245,9 +303,9 @@ class ViewController: UIViewController {
         if woorkLoop {
             view.backgroundColor = oneColorWork
             
-            shapeView.tintColor = twoColorWork
-            shapeLayer.strokeColor = threeColorWork.cgColor
-   
+            progressLayer.strokeColor = fiveColorWork.cgColor
+            circleLayer.strokeColor = fourColorWork.cgColor
+            
             statusLabel.textColor = fiveColorWork
             timerLabel.textColor = fiveColorWork
             buttonPlayView.tintColor = fiveColorWork
@@ -255,9 +313,9 @@ class ViewController: UIViewController {
         } else {
             view.backgroundColor = oneColorRelaxing
             
-            shapeView.tintColor = twoColorRelaxing
-            shapeLayer.strokeColor = threeColorRelaxing.cgColor
-   
+            progressLayer.strokeColor = fiveColorRelaxing.cgColor
+            circleLayer.strokeColor = fourColorRelaxing.cgColor
+            
             statusLabel.textColor = fiveColorRelaxing
             timerLabel.textColor = fiveColorRelaxing
             buttonPlayView.tintColor = fiveColorRelaxing
