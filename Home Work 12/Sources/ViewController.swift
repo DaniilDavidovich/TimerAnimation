@@ -173,14 +173,15 @@ class ViewController: UIViewController {
             progressAnimation(duration: TimeInterval(time))
             print("start timer")
         } else if isStarted == true {
-            buttonPlayView.image = UIImage(systemName: "play")
             timer.invalidate()
-            isStarted = false
-            print("pause timer")
             if let presentation = progressLayer.presentation() {
                 progressLayer.strokeEnd = presentation.strokeEnd
             }
             progressLayer.removeAnimation(forKey: "progressAnimation")
+            buttonPlayView.image = UIImage(systemName: "play")
+            isStarted = false
+            print("pause timer")
+            
         }
         
     }
@@ -255,19 +256,19 @@ class ViewController: UIViewController {
         func creatingCircularPath() {
         
         let center: CGPoint = CGPoint(x: shapeView.frame.height / 2, y: shapeView.frame.width / 2)
-        let circularPath = UIBezierPath(arcCenter: center, radius: 128, startAngle: startPoint, endAngle: endPoint, clockwise: true)
+        let circularPath = UIBezierPath(arcCenter: center, radius: 128, startAngle: startPoint, endAngle: endPoint, clockwise: false)
         
         circleLayer.path = circularPath.cgPath
         circleLayer.fillColor = UIColor.clear.cgColor
         circleLayer.lineCap = .round
-        circleLayer.lineWidth = 22
+        circleLayer.lineWidth = 23
         circleLayer.strokeEnd = 1
         shapeView.layer.addSublayer(circleLayer)
         
         progressLayer.path = circularPath.cgPath
         progressLayer.fillColor = UIColor.clear.cgColor
         progressLayer.lineCap = .butt
-        progressLayer.lineWidth = 22
+        progressLayer.lineWidth = 23
         progressLayer.strokeEnd = 1
         shapeView.layer.addSublayer(progressLayer)
         
@@ -302,7 +303,6 @@ class ViewController: UIViewController {
         if woorkLoop {
             view.backgroundColor = oneColorWork
             
-            
             progressLayer.strokeColor = fiveColorWork.cgColor
             circleLayer.strokeColor = fourColorWork.cgColor
             
@@ -312,7 +312,6 @@ class ViewController: UIViewController {
             buttonResetView.tintColor = fiveColorWork
         } else {
             view.backgroundColor = oneColorRelaxing
-            
             
             progressLayer.strokeColor = fiveColorRelaxing.cgColor
             circleLayer.strokeColor = fourColorRelaxing.cgColor
