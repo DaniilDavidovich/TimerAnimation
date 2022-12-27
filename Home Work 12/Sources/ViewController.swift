@@ -27,6 +27,14 @@ class ViewController: UIViewController {
     private let shapeLayer = CAShapeLayer()
     
     //MARK: - UI elements
+    ///`1 Контейнер для размещения круга
+    private lazy var progressContainer: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
     
     private lazy var statusLabel: UILabel = {
         let label = UILabel()
@@ -45,12 +53,20 @@ class ViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+
+    ///2 Это то место где будет рисоваться анимация
+    private lazy var shapeView: UIView = {
+                let ellipse = UIView(frame: CGRect(x: 0, y: 0, width: 305, height: 305))
+        //        let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 3.7, weight: .medium, scale: .large)
+        //        ellipse.translatesAutoresizingMaskIntoConstraints = false
+                return ellipse
+        //    }()
     
-    private lazy var shapeView: UIImageView = {
-        let ellipse = UIImageView()
-        let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 3.7, weight: .medium, scale: .large)
-        ellipse.translatesAutoresizingMaskIntoConstraints = false
-        return ellipse
+//    private lazy var shapeView: UIImageView = {
+//        let ellipse = UIImageView()
+//        let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 3.7, weight: .medium, scale: .large)
+//        ellipse.translatesAutoresizingMaskIntoConstraints = false
+//        return ellipse
     }()
     
     private lazy var buttonPlayView: UIImageView = {
@@ -87,12 +103,16 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         setupHierarchy()
         setupLayout()
+        /// Сам круг создаём здесь! Первый раз
+        creatingCircularPath()
+        colorsElements()
     }
-    
+
+    /// из-за этой херни анимация сбрасывалась
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.colorsElements()
-        self.creatingCircularPath()
+//        self.colorsElements()
+//        self.creatingCircularPath()
         
     }
     
@@ -100,21 +120,28 @@ class ViewController: UIViewController {
     
     private func setupHierarchy() {
         let subviews = [statusLabel,
-                        timerLabel,
+                       timerLabel,
                         buttonPlay,
                         buttonPlayView,
                         buttonReset,
                         buttonResetView,
-                        shapeView
+                        progressContainer
+//                        shapeView
         ]
         subviews.forEach({ view.addSubview($0) })
-        
+
+        progressContainer.addSubview(shapeView)
         shapeView.addSubview(timerLabel)
     }
     
     private func setupLayout() {
         
         NSLayoutConstraint.activate([
+
+            progressContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            progressContainer.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -20),
+            progressContainer.heightAnchor.constraint(equalToConstant: 305),
+            progressContainer.widthAnchor.constraint(equalToConstant: 305),
             
             statusLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             statusLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -260),
@@ -122,10 +149,10 @@ class ViewController: UIViewController {
             timerLabel.centerXAnchor.constraint(equalTo: shapeView.centerXAnchor),
             timerLabel.centerYAnchor.constraint(equalTo: shapeView.centerYAnchor),
             
-            shapeView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            shapeView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -20),
-            shapeView.heightAnchor.constraint(equalToConstant: 305),
-            shapeView.widthAnchor.constraint(equalToConstant: 305),
+//            shapeView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+//            shapeView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -20),
+//            shapeView.heightAnchor.constraint(equalToConstant: 305),
+//            shapeView.widthAnchor.constraint(equalToConstant: 305),
             
             buttonPlayView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 70),
             buttonPlayView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 250),
@@ -160,14 +187,14 @@ class ViewController: UIViewController {
     }
     
     @objc private func buttonPlayPressed() {
-        if isStarted == false {
+        if !isStarted {
             timer = Timer.scheduledTimer(timeInterval: 0.001, target: self, selector: #selector(timerActive), userInfo: nil, repeats: true)
             timerLabel.text = formatTimer()
             isStarted = true
             buttonPlayView.image = UIImage(systemName: "pause")
-            progressAnimation(duration: TimeInterval(time))
+           progressAnimation(duration: TimeInterval(time))
             print("start timer")
-        } else if isStarted == true {
+        } else {
             timer.invalidate()
             if let presentation = progressLayer.presentation() {
                 progressLayer.strokeEnd = presentation.strokeEnd
@@ -198,7 +225,10 @@ class ViewController: UIViewController {
             time = TimerNumber.timeRelax
             timerLabel.text = ("\(time)")
             woorkLoop = false
+            /// меняем интерфейс, сбрасываем счётчик долей таймера, заново создаём круг
             colorsElements()
+            durationTimer = 1000
+            creatingCircularPath()
             progressAnimation(duration: TimeInterval(time))
             
         } else if time < 1 && woorkLoop == false {
@@ -207,7 +237,10 @@ class ViewController: UIViewController {
             time = TimerNumber.timeWork
             timerLabel.text = ("\(time)")
             woorkLoop = true
+            /// меняем интерфейс, сбрасываем счётчик долей таймера, заново создаём круг
             colorsElements()
+            durationTimer = 1000
+            creatingCircularPath()
             progressAnimation(duration: TimeInterval(time))
         }
         timerLabel.text = formatTimer()
@@ -218,11 +251,12 @@ class ViewController: UIViewController {
         if woorkLoop == true {
             time = TimerNumber.timeWork
             timerLabel.text = ("\(time)")
+            creatingCircularPath()
             isStartedCheck()
         } else {
-            durationTimer = 1000
             time = TimerNumber.timeRelax
             timerLabel.text = ("\(time)")
+            creatingCircularPath()
             isStartedCheck()
         }
         timerLabel.text = formatTimer()
@@ -242,9 +276,9 @@ class ViewController: UIViewController {
     private var startPoint = CGFloat(-Double.pi / 2)
     private var endPoint = CGFloat(3 * Double.pi / 2)
     
-        func creatingCircularPath() {
+    func creatingCircularPath() {
         
-        let center: CGPoint = CGPoint(x: shapeView.frame.height / 2, y: shapeView.frame.width / 2)
+        let center: CGPoint = CGPoint(x: shapeView.frame.size.width / 2.0, y: shapeView.frame.size.height / 2.0)
         let circularPath = UIBezierPath(arcCenter: center, radius: 128, startAngle: startPoint, endAngle: endPoint, clockwise: true)
         
         circleLayer.path = circularPath.cgPath
@@ -253,19 +287,19 @@ class ViewController: UIViewController {
         circleLayer.lineWidth = 23
         circleLayer.strokeEnd = 1
         shapeView.layer.addSublayer(circleLayer)
-        
+
         progressLayer.path = circularPath.cgPath
         progressLayer.fillColor = UIColor.clear.cgColor
         progressLayer.lineCap = .butt
         progressLayer.lineWidth = 23
-        progressLayer.strokeEnd = 1
+        progressLayer.strokeEnd = 0
         shapeView.layer.addSublayer(progressLayer)
     }
     
     func progressAnimation(duration: TimeInterval) {
         let circularAnimation = CABasicAnimation(keyPath: "strokeEnd")
         circularAnimation.duration = duration
-        circularAnimation.toValue = 0
+        circularAnimation.toValue = 1
         circularAnimation.fillMode = .forwards
         circularAnimation.isRemovedOnCompletion = false
         progressLayer.add(circularAnimation, forKey: "progressAnimation")
@@ -277,37 +311,35 @@ class ViewController: UIViewController {
         static let oneColorWork = #colorLiteral(red: 0.8627452254, green: 0.8627452254, blue: 0.8627452254, alpha: 1)
         static let twoColorWork = #colorLiteral(red: 0.4151946008, green: 0.395400703, blue: 0.3654464483, alpha: 1)
         static let threeColorWork = #colorLiteral(red: 0.9264768958, green: 0.6883662343, blue: 0.1297983527, alpha: 1)
-        static let fourColorWork = #colorLiteral(red: 0.4151946008, green: 0.395400703, blue: 0.3654464483, alpha: 1)
-        static let fiveColorWork = #colorLiteral(red: 0.1088501438, green: 0.1340978444, blue: 0.1635158956, alpha: 1)
+        static let fourColorWork = #colorLiteral(red: 0.1088501438, green: 0.1340978444, blue: 0.1635158956, alpha: 1)
         
         static let oneColorRelaxing = #colorLiteral(red: 0.9678950906, green: 0.8792178035, blue: 0.958201468, alpha: 1)
         static let twoColorRelaxing = #colorLiteral(red: 0.875171721, green: 0.825748384, blue: 0.9209445119, alpha: 1)
         static let threeColorRelaxing = #colorLiteral(red: 0.8918094039, green: 0.67772609, blue: 0.7940873504, alpha: 1)
-        static let fourColorRelaxing = #colorLiteral(red: 0.6169006824, green: 0.7127228379, blue: 0.7795686126, alpha: 1)
-        static let fiveColorRelaxing = #colorLiteral(red: 0.8242189884, green: 0.3782162666, blue: 0.5488271117, alpha: 1)
+        static let fourColorRelaxing = #colorLiteral(red: 0.8242189884, green: 0.3782162666, blue: 0.5488271117, alpha: 1)
     }
     
     func colorsElements() {
         if woorkLoop {
             view.backgroundColor = Colors.oneColorWork
-            
-            progressLayer.strokeColor = Colors.fiveColorWork.cgColor
-            circleLayer.strokeColor = Colors.fourColorWork.cgColor
-            
-            statusLabel.textColor = Colors.fiveColorWork
-            timerLabel.textColor = Colors.fiveColorWork
-            buttonPlayView.tintColor = Colors.fiveColorWork
-            buttonResetView.tintColor = Colors.fiveColorWork
+
+            progressLayer.strokeColor = Colors.twoColorWork.cgColor
+            circleLayer.strokeColor = Colors.threeColorWork.cgColor
+
+            statusLabel.textColor = Colors.fourColorWork
+            timerLabel.textColor = Colors.fourColorWork
+            buttonPlayView.tintColor = Colors.fourColorWork
+            buttonResetView.tintColor = Colors.fourColorWork
         } else {
             view.backgroundColor = Colors.oneColorRelaxing
-            
-            progressLayer.strokeColor = Colors.fiveColorRelaxing.cgColor
-            circleLayer.strokeColor = Colors.fourColorRelaxing.cgColor
-            
-            statusLabel.textColor = Colors.fiveColorRelaxing
-            timerLabel.textColor = Colors.fiveColorRelaxing
-            buttonPlayView.tintColor = Colors.fiveColorRelaxing
-            buttonResetView.tintColor = Colors.fiveColorRelaxing
+
+            progressLayer.strokeColor = Colors.twoColorRelaxing.cgColor
+            circleLayer.strokeColor = Colors.threeColorRelaxing.cgColor
+
+            statusLabel.textColor = Colors.fourColorRelaxing
+            timerLabel.textColor = Colors.fourColorRelaxing
+            buttonPlayView.tintColor = Colors.fourColorRelaxing
+            buttonResetView.tintColor = Colors.fourColorRelaxing
         }
     }
 }
