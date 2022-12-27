@@ -12,8 +12,8 @@ class ViewController: UIViewController {
     //MARK: - Elements To Timer and Animation
     
     enum TimerNumber {
-        static let timeWork = 3
-        static let timeRelax = 3
+        static let timeWork = 10
+        static let timeRelax = 5
     }
 
     private var timer = Timer()
@@ -269,14 +269,14 @@ class ViewController: UIViewController {
         circleLayer.path = circularPath.cgPath
         circleLayer.fillColor = UIColor.clear.cgColor
         circleLayer.lineCap = .round
-        circleLayer.lineWidth = 23
+        circleLayer.lineWidth = 28
         circleLayer.strokeEnd = 1
         shapeView.layer.addSublayer(circleLayer)
 
         progressLayer.path = circularPath.cgPath
         progressLayer.fillColor = UIColor.clear.cgColor
         progressLayer.lineCap = .butt
-        progressLayer.lineWidth = 23
+        progressLayer.lineWidth = 28
         progressLayer.strokeEnd = 0
         shapeView.layer.addSublayer(progressLayer)
     }
