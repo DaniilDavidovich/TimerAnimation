@@ -49,8 +49,6 @@ class ViewController: UIViewController {
     private lazy var shapeView: UIImageView = {
         let ellipse = UIImageView()
         let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 3.7, weight: .medium, scale: .large)
-//        let image = UIImage(systemName: "circle", withConfiguration: imageConfiguration)
-//        ellipse.image = image
         ellipse.translatesAutoresizingMaskIntoConstraints = false
         return ellipse
     }()
@@ -82,7 +80,6 @@ class ViewController: UIViewController {
         button.addTarget(self, action: #selector(buttonResetPressed), for: .touchUpInside)
         return button
     }()
-    
     
     //MARK: - Lyfecycle
     
@@ -149,9 +146,7 @@ class ViewController: UIViewController {
             buttonReset.centerYAnchor.constraint(equalTo: buttonResetView.centerYAnchor),
             buttonReset.widthAnchor.constraint(equalToConstant: 90),
             buttonReset.heightAnchor.constraint(equalToConstant: 90)
-//
         ])
-        
     }
     
     //MARK: - Action Timer
@@ -181,9 +176,7 @@ class ViewController: UIViewController {
             buttonPlayView.image = UIImage(systemName: "play")
             isStarted = false
             print("pause timer")
-            
         }
-        
     }
     
     @objc func timerActive() {
@@ -194,7 +187,6 @@ class ViewController: UIViewController {
         }
         
         durationTimer = 1000
-        
         
         time -= 1
         timerLabel.text = formatTimer()
@@ -219,7 +211,6 @@ class ViewController: UIViewController {
             progressAnimation(duration: TimeInterval(time))
         }
         timerLabel.text = formatTimer()
-        
     }
     
     @objc func buttonResetPressed() {
@@ -236,7 +227,6 @@ class ViewController: UIViewController {
         }
         timerLabel.text = formatTimer()
         print("reset timer")
-        
     }
     
     func isStartedCheck() {
@@ -251,7 +241,6 @@ class ViewController: UIViewController {
     private var progressLayer = CAShapeLayer()
     private var startPoint = CGFloat(-Double.pi / 2)
     private var endPoint = CGFloat(3 * Double.pi / 2)
-    
     
         func creatingCircularPath() {
         
@@ -271,7 +260,6 @@ class ViewController: UIViewController {
         progressLayer.lineWidth = 23
         progressLayer.strokeEnd = 1
         shapeView.layer.addSublayer(progressLayer)
-        
     }
     
     func progressAnimation(duration: TimeInterval) {
@@ -283,46 +271,45 @@ class ViewController: UIViewController {
         progressLayer.add(circularAnimation, forKey: "progressAnimation")
     }
     
-    
-
     //MARK: - Setups Colors
     
-    var oneColorWork = #colorLiteral(red: 0.8627452254, green: 0.8627452254, blue: 0.8627452254, alpha: 1)
-    var twoColorWork = #colorLiteral(red: 0.4151946008, green: 0.395400703, blue: 0.3654464483, alpha: 1)
-    var threeColorWork = #colorLiteral(red: 0.9264768958, green: 0.6883662343, blue: 0.1297983527, alpha: 1)
-    var fourColorWork = #colorLiteral(red: 0.4151946008, green: 0.395400703, blue: 0.3654464483, alpha: 1)
-    var fiveColorWork = #colorLiteral(red: 0.1088501438, green: 0.1340978444, blue: 0.1635158956, alpha: 1)
+    fileprivate enum Colors {
+        static let oneColorWork = #colorLiteral(red: 0.8627452254, green: 0.8627452254, blue: 0.8627452254, alpha: 1)
+        static let twoColorWork = #colorLiteral(red: 0.4151946008, green: 0.395400703, blue: 0.3654464483, alpha: 1)
+        static let threeColorWork = #colorLiteral(red: 0.9264768958, green: 0.6883662343, blue: 0.1297983527, alpha: 1)
+        static let fourColorWork = #colorLiteral(red: 0.4151946008, green: 0.395400703, blue: 0.3654464483, alpha: 1)
+        static let fiveColorWork = #colorLiteral(red: 0.1088501438, green: 0.1340978444, blue: 0.1635158956, alpha: 1)
+        
+        static let oneColorRelaxing = #colorLiteral(red: 0.9678950906, green: 0.8792178035, blue: 0.958201468, alpha: 1)
+        static let twoColorRelaxing = #colorLiteral(red: 0.875171721, green: 0.825748384, blue: 0.9209445119, alpha: 1)
+        static let threeColorRelaxing = #colorLiteral(red: 0.8918094039, green: 0.67772609, blue: 0.7940873504, alpha: 1)
+        static let fourColorRelaxing = #colorLiteral(red: 0.6169006824, green: 0.7127228379, blue: 0.7795686126, alpha: 1)
+        static let fiveColorRelaxing = #colorLiteral(red: 0.8242189884, green: 0.3782162666, blue: 0.5488271117, alpha: 1)
+    }
     
-    var oneColorRelaxing = #colorLiteral(red: 0.9678950906, green: 0.8792178035, blue: 0.958201468, alpha: 1)
-    var twoColorRelaxing = #colorLiteral(red: 0.875171721, green: 0.825748384, blue: 0.9209445119, alpha: 1)
-    var threeColorRelaxing = #colorLiteral(red: 0.8918094039, green: 0.67772609, blue: 0.7940873504, alpha: 1)
-    var fourColorRelaxing = #colorLiteral(red: 0.6169006824, green: 0.7127228379, blue: 0.7795686126, alpha: 1)
-    var fiveColorRelaxing = #colorLiteral(red: 0.8242189884, green: 0.3782162666, blue: 0.5488271117, alpha: 1)
-
     func colorsElements() {
         if woorkLoop {
-            view.backgroundColor = oneColorWork
+            view.backgroundColor = Colors.oneColorWork
             
-            progressLayer.strokeColor = fiveColorWork.cgColor
-            circleLayer.strokeColor = fourColorWork.cgColor
+            progressLayer.strokeColor = Colors.fiveColorWork.cgColor
+            circleLayer.strokeColor = Colors.fourColorWork.cgColor
             
-            statusLabel.textColor = fiveColorWork
-            timerLabel.textColor = fiveColorWork
-            buttonPlayView.tintColor = fiveColorWork
-            buttonResetView.tintColor = fiveColorWork
+            statusLabel.textColor = Colors.fiveColorWork
+            timerLabel.textColor = Colors.fiveColorWork
+            buttonPlayView.tintColor = Colors.fiveColorWork
+            buttonResetView.tintColor = Colors.fiveColorWork
         } else {
-            view.backgroundColor = oneColorRelaxing
+            view.backgroundColor = Colors.oneColorRelaxing
             
-            progressLayer.strokeColor = fiveColorRelaxing.cgColor
-            circleLayer.strokeColor = fourColorRelaxing.cgColor
+            progressLayer.strokeColor = Colors.fiveColorRelaxing.cgColor
+            circleLayer.strokeColor = Colors.fourColorRelaxing.cgColor
             
-            statusLabel.textColor = fiveColorRelaxing
-            timerLabel.textColor = fiveColorRelaxing
-            buttonPlayView.tintColor = fiveColorRelaxing
-            buttonResetView.tintColor = fiveColorRelaxing
+            statusLabel.textColor = Colors.fiveColorRelaxing
+            timerLabel.textColor = Colors.fiveColorRelaxing
+            buttonPlayView.tintColor = Colors.fiveColorRelaxing
+            buttonResetView.tintColor = Colors.fiveColorRelaxing
         }
     }
-  
 }
 
 
