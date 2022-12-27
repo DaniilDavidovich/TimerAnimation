@@ -57,16 +57,7 @@ class ViewController: UIViewController {
     ///2 Это то место где будет рисоваться анимация
     private lazy var shapeView: UIView = {
                 let ellipse = UIView(frame: CGRect(x: 0, y: 0, width: 305, height: 305))
-        //        let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 3.7, weight: .medium, scale: .large)
-        //        ellipse.translatesAutoresizingMaskIntoConstraints = false
                 return ellipse
-        //    }()
-    
-//    private lazy var shapeView: UIImageView = {
-//        let ellipse = UIImageView()
-//        let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 3.7, weight: .medium, scale: .large)
-//        ellipse.translatesAutoresizingMaskIntoConstraints = false
-//        return ellipse
     }()
     
     private lazy var buttonPlayView: UIImageView = {
@@ -126,7 +117,6 @@ class ViewController: UIViewController {
                         buttonReset,
                         buttonResetView,
                         progressContainer
-//                        shapeView
         ]
         subviews.forEach({ view.addSubview($0) })
 
@@ -148,11 +138,6 @@ class ViewController: UIViewController {
             
             timerLabel.centerXAnchor.constraint(equalTo: shapeView.centerXAnchor),
             timerLabel.centerYAnchor.constraint(equalTo: shapeView.centerYAnchor),
-            
-//            shapeView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            shapeView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -20),
-//            shapeView.heightAnchor.constraint(equalToConstant: 305),
-//            shapeView.widthAnchor.constraint(equalToConstant: 305),
             
             buttonPlayView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 70),
             buttonPlayView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 250),
