@@ -15,7 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A5ECFD4B29554FE6002BA3E9 /* Home Work 12.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Home Work 12.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5ECFD4B29554FE6002BA3E9 /* TimerAnimation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimerAnimation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5ECFD4E29554FE6002BA3E9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A5ECFD5029554FE6002BA3E9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		A5ECFD5229554FE6002BA3E9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -38,7 +38,7 @@
 		A5ECFD4229554FE6002BA3E9 = {
 			isa = PBXGroup;
 			children = (
-				A5ECFD4D29554FE6002BA3E9 /* Home Work 12 */,
+				A5ECFD4D29554FE6002BA3E9 /* TimerAnimation */,
 				A5ECFD4C29554FE6002BA3E9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -46,18 +46,18 @@
 		A5ECFD4C29554FE6002BA3E9 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A5ECFD4B29554FE6002BA3E9 /* Home Work 12.app */,
+				A5ECFD4B29554FE6002BA3E9 /* TimerAnimation.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A5ECFD4D29554FE6002BA3E9 /* Home Work 12 */ = {
+		A5ECFD4D29554FE6002BA3E9 /* TimerAnimation */ = {
 			isa = PBXGroup;
 			children = (
 				A5ECFD632955529F002BA3E9 /* Sources */,
 				A5ECFD622955528E002BA3E9 /* Resources */,
 			);
-			path = "Home Work 12";
+			path = TimerAnimation;
 			sourceTree = "<group>";
 		};
 		A5ECFD622955528E002BA3E9 /* Resources */ = {
@@ -91,9 +91,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A5ECFD4A29554FE6002BA3E9 /* Home Work 12 */ = {
+		A5ECFD4A29554FE6002BA3E9 /* TimerAnimation */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A5ECFD5F29554FE7002BA3E9 /* Build configuration list for PBXNativeTarget "Home Work 12" */;
+			buildConfigurationList = A5ECFD5F29554FE7002BA3E9 /* Build configuration list for PBXNativeTarget "TimerAnimation" */;
 			buildPhases = (
 				A5ECFD4729554FE6002BA3E9 /* Sources */,
 				A5ECFD4829554FE6002BA3E9 /* Frameworks */,
@@ -103,9 +103,9 @@
 			);
 			dependencies = (
 			);
-			name = "Home Work 12";
+			name = TimerAnimation;
 			productName = "Home Work 12";
-			productReference = A5ECFD4B29554FE6002BA3E9 /* Home Work 12.app */;
+			productReference = A5ECFD4B29554FE6002BA3E9 /* TimerAnimation.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -123,7 +123,7 @@
 					};
 				};
 			};
-			buildConfigurationList = A5ECFD4629554FE6002BA3E9 /* Build configuration list for PBXProject "Home Work 12" */;
+			buildConfigurationList = A5ECFD4629554FE6002BA3E9 /* Build configuration list for PBXProject "TimerAnimation" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -136,7 +136,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A5ECFD4A29554FE6002BA3E9 /* Home Work 12 */,
+				A5ECFD4A29554FE6002BA3E9 /* TimerAnimation */,
 			);
 		};
 /* End PBXProject section */
@@ -301,7 +301,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 8PHY3R68LB;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Home Work 12/Resources/Info.plist";
+				INFOPLIST_FILE = TimerAnimation/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -328,7 +328,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 8PHY3R68LB;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Home Work 12/Resources/Info.plist";
+				INFOPLIST_FILE = TimerAnimation/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -349,7 +349,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A5ECFD4629554FE6002BA3E9 /* Build configuration list for PBXProject "Home Work 12" */ = {
+		A5ECFD4629554FE6002BA3E9 /* Build configuration list for PBXProject "TimerAnimation" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A5ECFD5D29554FE7002BA3E9 /* Debug */,
@@ -358,7 +358,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A5ECFD5F29554FE7002BA3E9 /* Build configuration list for PBXNativeTarget "Home Work 12" */ = {
+		A5ECFD5F29554FE7002BA3E9 /* Build configuration list for PBXNativeTarget "TimerAnimation" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A5ECFD6029554FE7002BA3E9 /* Debug */,
