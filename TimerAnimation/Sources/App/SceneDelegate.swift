@@ -1,6 +1,6 @@
 //
 //  SceneDelegate.swift
-//  Home Work 12
+//  TimerAnimation
 //
 //  Created by Daniil Davidovich on 23.12.22.
 //
